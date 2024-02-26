@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppMap from '@/components/AppMap.vue'
+</script>
 
 <script lang="ts">
 import { AccomService } from '@/services/accom.service'
@@ -36,9 +38,23 @@ export default {
       return this.accomGroupList.reduce((totalCount: number, accomGroup: any) => {
         return totalCount + accomGroup.items.length
       }, 0)
+    },
+    accomMarkerList() {
+      if (!this.accomGroupList.length) {
+        return []
+      }
+      return this.accomGroupList.map((group: any) => {
+        return {
+          lat: group.locationValue.latitude,
+          lng: group.locationValue.longitude
+        }
+      })
     }
   },
   methods: {
+    $onMarkerClicked({ index }: { marker: any; index: number }) {
+      this.toggleSelectedAccom(index)
+    },
     toggleSelectedAccom(accomGroupIndex: number) {
       if (this.selectedAccomGroupIndex && this.selectedAccomGroupIndex === accomGroupIndex) {
         this.selectedAccomGroupIndex = -1
@@ -148,39 +164,7 @@ export default {
     </v-navigation-drawer>
 
     <v-main class="d-flex align-center justify-center" style="min-height: 300px; width: 100%">
-      <GMapMap
-        :center="{ lat: 10.811559793377652, lng: 106.69883737242677 }"
-        :zoom="15"
-        style="width: 100%; height: 100%"
-        :options="{
-          zoomControl: true,
-          mapTypeControl: true,
-          scaleControl: true,
-          streetViewControl: true,
-          rotateControl: true,
-          fullscreenControl: true,
-          mapId: 'a44becb1faab52a'
-        }"
-      >
-        <GMapMarker
-          v-for="(accomGroup, index) in accomGroupList"
-          :key="accomGroup.id"
-          :position="{
-            lat: accomGroup.locationValue.latitude,
-            lng: accomGroup.locationValue.longitude
-          }"
-          :clickable="true"
-          :draggable="false"
-          @click="toggleSelectedAccom(index)"
-          :icon="{
-            fillColor: '#00FF00',
-            fillOpacity: 0.6,
-            strokeWeight: 0,
-            scale: 10
-          }"
-        >
-        </GMapMarker>
-      </GMapMap>
+      <AppMap :markerList="accomMarkerList" @marker-clicked="$onMarkerClicked" />
     </v-main>
   </v-layout>
 </template>
