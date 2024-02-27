@@ -16,13 +16,13 @@ jobs:
         id: map_branch_to_env
         run: |
           if [[ "${{ github.ref }}" = "refs/heads/develop" ]]; then
-            echo "::set-output name=environment::development"
+            echo "::set-output name=env_name::development"
           elif [[ "${{ github.ref }}" = "refs/heads/staging" ]]; then
-            echo "::set-output name=environment::staging"
+            echo "::set-output name=env_name::staging"
           elif [[ "${{ github.ref }}" = "refs/heads/production" ]]; then
-            echo "::set-output name=environment::production"
+            echo "::set-output name=env_name::production"
           else
-            echo "::set-output name=environment::unknown"
+            echo "::set-output name=env_name::unknown"
           fi
 
       - name: Checkout
@@ -38,8 +38,9 @@ jobs:
 
       - name: Build
         run: |
+          echo "Building for ${{ steps.map_branch_to_env.env_name }} environment"
           set -a
-          . env/${{ steps.map_branch_to_env.environment }}.env
+          . env/${{ steps.map_branch_to_env.env_name }}.env
           set +a
           npm run build-only
 
