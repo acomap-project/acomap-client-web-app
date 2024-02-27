@@ -37,11 +37,9 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          env_file: env/development.env
         run: |
-          echo "Building for ${{ steps.map_branch_to_env.env_name }} environment"
-          set -a
-          . env/${{ steps.map_branch_to_env.env_name }}.env
-          set +a
           npm run build-only
 
       - name: Deploy
