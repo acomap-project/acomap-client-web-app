@@ -39,7 +39,9 @@ jobs:
       - name: Build
         env:
           env_file: env/${{ steps.map_branch_to_env.environment }}.env
-        run: npm run build-only
+        run: |
+          echo "env/${{ steps.map_branch_to_env.environment }}.env"
+          npm run build-only
 
       - name: Deploy
         uses: jakejarvis/s3-sync-action@master
