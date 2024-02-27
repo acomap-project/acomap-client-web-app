@@ -15,11 +15,11 @@ jobs:
       - name: Map branch to environment
         id: map_branch_to_env
         run: |
-          if [[ "${{ github.ref }}" = "refs/heads/develop" ]]; then
+          if [ "${{ github.ref }}" = "refs/heads/develop" ]; then
             echo "::set-output name=env_name::development"
-          elif [[ "${{ github.ref }}" = "refs/heads/staging" ]]; then
+          elif [ "${{ github.ref }}" = "refs/heads/staging" ]; then
             echo "::set-output name=env_name::staging"
-          elif [[ "${{ github.ref }}" = "refs/heads/production" ]]; then
+          elif [ "${{ github.ref }}" = "refs/heads/production" ]; then
             echo "::set-output name=env_name::production"
           else
             echo "::set-output name=env_name::unknown"
