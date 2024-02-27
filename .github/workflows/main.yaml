@@ -38,7 +38,7 @@ jobs:
 
       - name: Build
         run: |
-          cat env/${{ steps.map_branch_to_env.env_name }}.env >> .env
+          cat env/${{ steps.map_branch_to_env.outputs.env_name }}.env >> .env
           npm run build-only
 
       - name: Deploy
