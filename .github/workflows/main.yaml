@@ -1,15 +1,30 @@
 # create github actions to deploy vue app to amazon S3
-name: Deploy to S3
+name: Deployment
 
 on:
   push:
     branches:
+      - develop
+      - staging
       - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Map branch to environment
+        id: map_branch_to_env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "::set-output name=environment::development"
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            echo "::set-output name=environment::staging"
+          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
+            echo "::set-output name=environment::production"
+          else
+            echo "::set-output name=environment::unknown"
+          fi
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -22,6 +37,8 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          env_file: env/${{ steps.map_branch_to_env.environment }}.env
         run: npm run build-only
 
       - name: Deploy
