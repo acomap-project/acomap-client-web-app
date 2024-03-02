@@ -40,14 +40,13 @@ export interface AccomGroupedByLocation {
     items: Accom[]
 }
 
-const API_URL = 'https://t828nfa8na.execute-api.ap-southeast-1.amazonaws.com/dev/accommodations'
-// const API_URL = 'http://localhost:3000/accommodations'
+const API_URL = import.meta.env.VITE_ACCOMMODATION_API_BASE_URL
 
 export class AccomService {
     constructor() {}
 
     public async listAccommodations(q: ListAccommodationQuery): Promise<AccomGroupedByLocation[]> {
-        const url = new URL(API_URL)
+        const url = new URL(`${API_URL}/accommodations`)
         q.district && url.searchParams.append('district', q.district)
         q.mostRecentDays && url.searchParams.append('most_recent_days', q.mostRecentDays.toString())
         q.minPrice && url.searchParams.append('min_price', q.minPrice.toString())
