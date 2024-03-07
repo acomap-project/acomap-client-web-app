@@ -58,7 +58,8 @@ export class AccomService {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            mode: 'cors'
         })
 
         const data = await response.json()
@@ -66,14 +67,14 @@ export class AccomService {
         if (data.status === 'OK') {
             // group data.items by locationValue and return list of items with updated locationValue
             const result = data.items.reduce((acc, item) => {
-                const key = `${item.locationValue.longitude}-${item.locationValue.latitude}`
+                const key = `${item.location.longitude}-${item.location.latitude}`
                 const existingItem = acc[key]
 
                 if (existingItem) {
                     existingItem.items.push(item)
                 } else {
                     acc[key] = {
-                        locationValue: item.locationValue,
+                        location: item.location,
                         items: [item]
                     }
                 }

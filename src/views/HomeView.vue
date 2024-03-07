@@ -45,8 +45,8 @@ export default {
       }
       return this.accomGroupList.map((group: any) => {
         return {
-          lat: group.locationValue.latitude,
-          lng: group.locationValue.longitude
+          lat: group.location.latitude,
+          lng: group.location.longitude
         }
       })
     }
